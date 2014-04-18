@@ -1,4 +1,6 @@
 require 'date'
+require 'pp'
+require 'matrix'
 
 class Second
 
@@ -13,21 +15,40 @@ class Second
     @seed
   end
 
-  def seed=(val)
-    @seed=val
+  def to_a
+    seconds_to_base_2_array(seed)
+  end
+
+  def to_matrix
+    zero_padded_array = zero_pad_columns to_a
+    Matrix.build(4,6) { |row, col| 0 }
+
   end
 
   #private
 
-    def digits_to_columns(digits)
+    def zero_pad_columns(base_2_ary)
 
     end
 
-    def col_height(index)
-      [2,4,3,4,3,4][index]
+    def seconds_to_base_2_array(seconds)
+      base_10_ary_to_base_2_ary(seconds_to_base_10_array(seconds))
     end
 
-    def seconds_to_digits(seconds)
+    def seed=(val)
+      @seed=val
+    end
+
+    # returns array of big-endian column arrays
+    def base_10_ary_to_base_2_ary(base10ary)
+      base2ary = []
+      base10ary.each do |digit|
+        base2ary << digit.to_s(2).split(//).map { |x| x.to_i }.reverse
+      end
+      base2ary
+    end
+
+    def seconds_to_base_10_array(seconds)
       datetime = DateTime.strptime(seconds.to_s,"%s")
       hour = datetime.strftime("%H").to_i
       minute = datetime.strftime("%M").to_i
