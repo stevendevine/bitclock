@@ -4,9 +4,6 @@ require 'matrix'
 
 class Second
 
-  # 23 34 34 bit column height
-  # 24:59:59 time max for column
-
   def initialize(seconds = seconds_since_midnight)
     self.seed = seconds
   end
@@ -20,10 +17,23 @@ class Second
   end
 
   def to_matrix
-    zero_padded_columns = zero_pad_columns to_a
+    zero_padded_columns = to_a
     Matrix.build(4,6) do |row, col|
       zero_padded_columns[col][row]
     end
+  end
+
+  def symmetry?
+    matrix_cols = to_matrix.column_vectors
+    matrix_cols[0]==matrix_cols[5] && matrix_cols[1] == matrix_cols[4] && matrix_cols[2] == matrix_cols[3]
+  end
+
+  def time
+    datetime = DateTime.strptime(seed.to_s,"%s")
+    hour = datetime.strftime("%I").to_i
+    minute = datetime.strftime("%M").to_i
+    second = datetime.strftime("%S").to_i
+    "#{hour}:#{minute}:#{second}"
   end
 
   #private

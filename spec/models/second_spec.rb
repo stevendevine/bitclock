@@ -17,7 +17,8 @@ describe 'Second' do
   end
   context 'is correctly represented in matrix form' do
     before do
-      @second = Second.new
+      @seed = 82000
+      @second = Second.new @seed
       @matrix = @second.to_matrix
     end
     context 'rows' do
@@ -26,8 +27,8 @@ describe 'Second' do
     context 'columns' do
       it { (0..3).each { |i| expect(@matrix.row(i).size).to be_eql(6) } }
     end
-    context 'always has at least one non-zero entry' do
-      it { (0..(24*60*60)).each { |second| expect(Second.new(second).to_matrix.zero?).to be_false}}
+    context 'has at least one non-zero entry' do
+      it { expect(Second.new.to_matrix.zero?).to be_false }
     end
     context 'is equivalent to array form' do
       before do
@@ -43,10 +44,18 @@ describe 'Second' do
       }
     end
   end
-  context 'determines symmetry' do
-    before do
-      @second = Second.new
+  context 'determines symmetry across middle-most Y axis' do
+    context 'with valid data' do
+      before do
+        @second = Second.new(60*60+10) # bottom row 010010
+      end
+      it { expect(@second.symmetry?).to be_true }
     end
-
+    context 'with invalid data' do
+      before do
+        @second = Second.new(60*60+11) # bottom row 010010
+      end
+      it { expect(@second.symmetry?).to be_false }
+    end
   end
 end
