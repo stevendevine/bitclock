@@ -17,11 +17,36 @@ describe 'Second' do
   end
   context 'is correctly represented in matrix form' do
     before do
-      @matrix = Second.new.to_matrix
+      @second = Second.new
+      @matrix = @second.to_matrix
     end
-    it { expect(@matrix.row_size()).to be_eql(4)}
-    it { (0..5).each do |i|
-      expect(@matrix.row(i).size).to be_eql(6)
-    end }
+    context 'rows' do
+      it { expect(@matrix.row_size()).to be_eql(4)}
+    end
+    context 'columns' do
+      it { (0..3).each { |i| expect(@matrix.row(i).size).to be_eql(6) } }
+    end
+    context 'always has at least one non-zero entry' do
+      it { (0..(24*60*60)).each { |second| expect(Second.new(second).to_matrix.zero?).to be_false}}
+    end
+    context 'is equivalent to array form' do
+      before do
+        @matrix_columns = @second.to_matrix.column_vectors
+        @array_columns = @second.to_a
+      end
+      it {
+        @array_columns.each_with_index do |col,i|
+          col.each_with_index do |bit,j|
+            expect(bit).to be_eql(@matrix_columns[i][j])
+          end
+        end
+      }
+    end
+  end
+  context 'determines symmetry' do
+    before do
+      @second = Second.new
+    end
+
   end
 end
