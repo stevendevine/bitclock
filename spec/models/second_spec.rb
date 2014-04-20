@@ -1,5 +1,6 @@
 require 'spec_helper'
 require_relative '../../second.rb'
+require_relative '../../symmetry_engine.rb'
 
 describe 'Second' do
   context 'is initialized without a parameter' do
@@ -44,18 +45,78 @@ describe 'Second' do
       }
     end
   end
-  context 'determines symmetry across middle-most Y axis' do
-    context 'with valid data' do
-      before do
-        @second = Second.new(60*60+10) # bottom row 010010
+  context 'determines symmetry' do
+    context 'across middle-most Y axis' do
+      context 'with valid data' do
+        before do
+          @second = Second.initialize_from_hms(1,0,10) # bottom row 010010
+        end
+        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_true }
       end
-      it { expect(@second.symmetry?).to be_true }
+      context 'with invalid data' do
+        before do
+          @second = Second.initialize_from_hms(1,0,11) # bottom row 010011
+        end
+        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_false }
+      end
     end
-    context 'with invalid data' do
-      before do
-        @second = Second.new(60*60+11) # bottom row 010010
+    context 'on col 0' do
+      context 'with invalid data' do
+        before do
+          @second = Second.initialize_from_hms(10,0,0)
+        end
+        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_false }
       end
-      it { expect(@second.symmetry?).to be_false }
+    end
+    context 'on col 1' do
+      context 'with valid data' do
+        before do
+          @second = Second.initialize_from_hms(10,10,0)
+        end
+        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_true }
+      end
+      context 'with invalid data' do
+        before do
+          @second = Second.initialize_from_hms(10,10,11)
+        end
+        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_false }
+      end
+    end
+    context 'on col 2' do
+      context 'with valid data' do
+       before do
+         @second = Second.initialize_from_hms(1,11,0)
+       end
+       it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_true }
+      end
+      context 'with invalid data' do
+        before do
+          @second = Second.initialize_from_hms(1,11,2)
+        end
+        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_false }
+      end
+    end
+    context 'on col 3' do
+      context 'with valid data' do
+        before do
+          @second = Second.initialize_from_hms(1,11,11)
+        end
+        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_true }
+      end
+      context 'with invalid data' do
+        before do
+          @second = Second.initialize_from_hms(12,11,11)
+        end
+        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_false }
+      end
+    end
+    context 'on col 4' do
+
+      # there is no valid data for col 4 y-axis symmetry - hour is always nonzero
+
+      context 'with invalid data' do
+
+      end
     end
   end
 end

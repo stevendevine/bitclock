@@ -8,6 +8,11 @@ class Second
     self.seed = seconds
   end
 
+  def self.initialize_from_hms(h,m,s)
+    raise "Cannot initialize hour to 0 (will wrap hour up to 12 instead, is that what you meant?)" if h==0
+    Second.new(h*60*60 + m*60 + s)
+  end
+
   def seed
     @seed
   end
@@ -23,11 +28,6 @@ class Second
     end
   end
 
-  def symmetry?
-    matrix_cols = to_matrix.column_vectors
-    matrix_cols[0]==matrix_cols[5] && matrix_cols[1] == matrix_cols[4] && matrix_cols[2] == matrix_cols[3]
-  end
-
   def time
     datetime = DateTime.strptime(seed.to_s,"%s")
     hour = datetime.strftime("%I").to_i
@@ -36,7 +36,7 @@ class Second
     "#{hour}:#{minute}:#{second}"
   end
 
-  #private
+  private
 
     def zero_pad_columns(base_2_ary)
       zero_padded = []
