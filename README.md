@@ -3,6 +3,8 @@ bitclock
 
 Determine and predict symmetry in the display of the bit clock on Richard Kent Jordan's desk.
 
+[Clock:] (http://www.thinkgeek.com/product/59e0/)
+
 ## 0.1
 - Console script
 - Print ascii clock of argument/current time
