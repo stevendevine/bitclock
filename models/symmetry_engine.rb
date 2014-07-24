@@ -1,23 +1,86 @@
+require_relative 'second'
+require_relative 'symmetry'
 
 class SymmetryEngine
 
-  def self.symmetry?(matrix)
-    !self.symmetry(matrix).empty?
+  def initialize
+    @sym = Symmetry.new
   end
 
-  def self.symmetry(matrix)
-    symmetry = []
-    (0..6).each do |i|
-      symmetry << SymmetryEngine.sym_off_y_axis(matrix,i) if SymmetryEngine.sym_off_y_axis(matrix,i)
-      symmetry << SymmetryEngine.sym_on_y_axis(matrix,i) if SymmetryEngine.sym_on_y_axis(matrix,i)
-      symmetry << SymmetryEngine.sym_off_x_axis(matrix,i) if SymmetryEngine.sym_off_x_axis(matrix,i)
-      symmetry << SymmetryEngine.sym_on_x_axis(matrix,i) if SymmetryEngine.sym_on_x_axis(matrix,i)
+  # def self.symmetry?(matrix)
+  #   !self.symmetry(matrix).empty?
+  # end
+
+  # def self.symmetry(matrix)
+  #   symmetry = []
+  #   (0..6).each do |i|
+  #     symmetry << SymmetryEngine.sym_off_y_axis(matrix,i) if SymmetryEngine.sym_off_y_axis(matrix,i)
+  #     symmetry << SymmetryEngine.sym_on_y_axis(matrix,i) if SymmetryEngine.sym_on_y_axis(matrix,i)
+  #     symmetry << SymmetryEngine.sym_off_x_axis(matrix,i) if SymmetryEngine.sym_off_x_axis(matrix,i)
+  #     symmetry << SymmetryEngine.sym_on_x_axis(matrix,i) if SymmetryEngine.sym_on_x_axis(matrix,i)
+  #   end
+  #   symmetry
+  # end
+
+  # basic idea
+  # reduce matrix to minor of itself
+    # remove any zero column touching an edge until none remain
+    # remove any zero row touching an edge until none remain
+  # reduce minor to two parts
+    # odd row/col: ignore middle row/col
+  # reverse one part across the axis in question
+  # compare the two for symmetry
+
+
+  # private
+
+  # @TODO I seem to have stumbled into creating a gem for matrix symmetry
+  #
+
+    def print_matrix(matrix)
+      matrix.row_vectors.each { |x| puts x.inspect}
     end
-    symmetry
-  end
 
-  private
+    def sym
+      @sym
+    end
+    def reduce(original_matrix)
+      matrix = original_matrix
+      print_matrix(matrix)
+      matrix = reduce_matrix_cols(matrix)
+      print_matrix(matrix)
+      matrix = reduce_matrix_rows(matrix)
+      print_matrix(matrix)
+      puts "Symmetry row: #{sym.row}, Symmetry col: #{sym.col}"
+    end
 
+    def reduce_matrix_cols(matrix)
+      columns = matrix.column_vectors
+      sym.col = columns.size / 2
+      while columns.first.magnitude == 0
+        columns.shift
+        @sym.col -= 0.5
+      end
+      while columns.last.magnitude == 0
+        columns.pop
+        @sym.col -= 0.5
+      end
+      Matrix.columns(columns)
+    end
+
+    def reduce_matrix_rows(matrix)
+      rows = matrix.row_vectors
+      @sym.row = rows.size / 2
+      while rows.first.magnitude == 0
+        rows.shift
+        @sym.row -= 0.5
+      end
+      while rows.last.magnitude == 0
+        rows.pop
+        @sym.row -= 0.5
+      end
+      Matrix.rows(rows)
+    end
   #     F   0
   # 1   N   0
   #     F   1

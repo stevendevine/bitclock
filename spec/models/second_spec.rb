@@ -1,6 +1,6 @@
 require 'spec_helper'
-require_relative '../../second.rb'
-require_relative '../../symmetry_engine.rb'
+require_relative '../../models/second.rb'
+require_relative '../../models/symmetry_engine.rb'
 
 describe 'Second' do
   context 'is initialized without a parameter' do
