@@ -29,7 +29,7 @@ describe 'Second' do
       it { (0..3).each { |i| expect(@matrix.row(i).size).to be_eql(6) } }
     end
     context 'has at least one non-zero entry' do
-      it { expect(Second.new.to_matrix.zero?).to be_false }
+      it { (0..43200).each { |i| expect(Second.new(i).to_matrix.zero?).to be_false } }
     end
     context 'is equivalent to array form' do
       before do
@@ -43,80 +43,6 @@ describe 'Second' do
           end
         end
       }
-    end
-  end
-  context 'determines symmetry' do
-    context 'across middle-most Y axis' do
-      context 'with valid data' do
-        before do
-          @second = Second.initialize_from_hms(1,0,10) # bottom row 010010
-        end
-        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_true }
-      end
-      context 'with invalid data' do
-        before do
-          @second = Second.initialize_from_hms(1,0,11) # bottom row 010011
-        end
-        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_false }
-      end
-    end
-    context 'on col 0' do
-      context 'with invalid data' do
-        before do
-          @second = Second.initialize_from_hms(10,0,0)
-        end
-        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_false }
-      end
-    end
-    context 'on col 1' do
-      context 'with valid data' do
-        before do
-          @second = Second.initialize_from_hms(10,10,0)
-        end
-        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_true }
-      end
-      context 'with invalid data' do
-        before do
-          @second = Second.initialize_from_hms(10,10,11)
-        end
-        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_false }
-      end
-    end
-    context 'on col 2' do
-      context 'with valid data' do
-       before do
-         @second = Second.initialize_from_hms(1,11,0)
-       end
-       it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_true }
-      end
-      context 'with invalid data' do
-        before do
-          @second = Second.initialize_from_hms(1,11,2)
-        end
-        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_false }
-      end
-    end
-    context 'on col 3' do
-      context 'with valid data' do
-        before do
-          @second = Second.initialize_from_hms(1,11,11)
-        end
-        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_true }
-      end
-      context 'with invalid data' do
-        before do
-          @second = Second.initialize_from_hms(12,11,11)
-        end
-        it { expect(SymmetryEngine.symmetry?(@second.to_matrix)).to be_false }
-      end
-    end
-    context 'on col 4' do
-
-      # there is no valid data for col 4 y-axis symmetry - hour is always nonzero
-
-      context 'with invalid data' do
-
-      end
     end
   end
 end

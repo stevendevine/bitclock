@@ -36,6 +36,16 @@ class Second
     "#{hour}:#{minute}:#{second}"
   end
 
+  def print_bit_block
+    to_matrix.row_vectors.each { |row|
+      row.each { |bit|
+        print "#{bit} "
+      }
+      print "\n"
+    }
+    time
+  end
+
   private
 
     def zero_pad_columns(base_2_ary)
